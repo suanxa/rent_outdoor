@@ -11,10 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('surya_items', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+       Schema::create('surya_items', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('category_id')->constrained('surya_categories')->onDelete('cascade');
+    $table->string('name');
+    $table->string('brand');
+    $table->decimal('rental_price', 10, 2);
+    $table->integer('stock');
+    $table->text('description')->nullable();
+    $table->timestamps();
+});
+
     }
 
     /**

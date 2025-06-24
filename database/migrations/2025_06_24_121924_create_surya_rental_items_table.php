@@ -12,9 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('surya_rental_items', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+    $table->id();
+    $table->foreignId('rental_id')->constrained('surya_rentals')->onDelete('cascade');
+    $table->foreignId('item_id')->constrained('surya_items')->onDelete('cascade');
+    $table->integer('quantity');
+    $table->decimal('subtotal', 12, 2);
+    $table->timestamps();
+});
+
     }
 
     /**

@@ -11,15 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('surya_customers', function (Blueprint $table) {
-    $table->id();
-    $table->string('name');
-    $table->string('email')->nullable();
-    $table->string('phone');
-    $table->text('address');
-    $table->timestamps();
-});
-
+                Schema::create('surya_users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('surya_customers');
+        Schema::dropIfExists('surya_users');
     }
 };
