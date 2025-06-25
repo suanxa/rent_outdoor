@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\SuryaItem;
+use App\Models\SuryaCategory;
 use Illuminate\Http\Request;
 
 class SuryaItemController extends Controller
@@ -13,8 +14,11 @@ class SuryaItemController extends Controller
     public function index()
     {
         {
-        $items = SuryaItem::all();
-        return view('items', compact('items'));
+                // Ambil semua kategori beserta relasi items-nya
+        $categories = SuryaCategory::with('items')->get();
+
+        // Kirim ke view items.blade.php
+        return view('items', compact('categories'));
         }
     }
 

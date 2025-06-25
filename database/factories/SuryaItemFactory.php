@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\SuryaCategory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\SuryaItem>
@@ -17,7 +18,7 @@ class SuryaItemFactory extends Factory
     public function definition(): array
     {
                return [
-            'category_id'   => 1, // pastikan ada category id 1 ya
+            'category_id'   => SuryaCategory::inRandomOrder()->first()->id,
             'name'          => $this->faker->words(3, true),
             'brand'         => $this->faker->randomElement(['Eiger', 'Consina', 'NatureHike', 'Rei']),
             'rental_price'  => $this->faker->numberBetween(10000, 50000),

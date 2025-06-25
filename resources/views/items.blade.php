@@ -7,25 +7,29 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-
 @include('partials.navbar')
-
-<div class="container mt-5 pt-5">
+<div class="container mt-2 pt-5">
     <h1 class="text-center mb-4">Daftar Peralatan Outdoor</h1>
     <p class="text-center mb-5">Temukan perlengkapan outdoor terbaik untuk petualangan Anda. Semua alat terawat dan siap pakai!</p>
     <div class="row">
-        @foreach ($items as $item)
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 shadow-sm">
-                <img src="{{ $item->image }}" class="card-img-top" alt="{{ $item->name }}">
-                <div class="card-body">
-                    <h5 class="card-title">{{ $item->name }}</h5>
-                    <p class="card-text">{{ $item->description }}</p>
-                    <p class="fw-bold">Rp {{ number_format($item->rental_price, 0, ',', '.') }} / malam</p>
+    @foreach ($categories as $category)
+    <h3 class="mt-5">{{ $category->name }}</h3>
+    <div class="row">
+        @foreach ($category->items as $item)
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="{{ $item->image }}" class="card-img-top" alt="{{ $item->name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ $item->name }}</h5>
+                        <p class="card-text">{{ $item->description }}</p>
+                        <p class="fw-bold">Rp {{ number_format($item->rental_price, 0, ',', '.') }} / malam</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    @endforeach
+        @endforeach
+    </div>
+@endforeach
+
     </div>
 
     <!-- Tombol Sewa Sekarang -->

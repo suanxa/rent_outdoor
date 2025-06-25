@@ -12,7 +12,7 @@ class SuryaRental extends Model
     protected $table = 'surya_rentals';
 
     protected $fillable = [
-        'customer_name',
+        'customer_id',
         'rental_date',
         'return_date',
         'status',
@@ -26,4 +26,10 @@ class SuryaRental extends Model
                     ->withPivot('quantity', 'subtotal_price')
                     ->withTimestamps();
     }
+
+    public function customer()
+{
+    return $this->belongsTo(Customer::class);
+}
+
 }

@@ -13,72 +13,126 @@
     <div class="container mt-5 pt-5">
         <h1 class="mt-4 text-center">Form Booking Rental Outdoor</h1>
         <p class="text-center">Silakan isi data berikut untuk melakukan pemesanan sewa alat outdoor.</p>
+@if(session('success'))
+    <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+@endif
+
+
+
 
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <form action="/rentals" method="POST">
-                    @csrf
 
-                    <div class="mb-3">
-                        <label for="customer_name" class="form-label">Nama Penyewa</label>
-                        <input type="text" class="form-control" id="customer_name" name="customer_name" required>
-                    </div>
 
-<div id="item-group">
-    <div class="item-row mb-3 d-flex">
-        <select name="items[]" class="form-select me-2" required>
-            <option value="" disabled selected>-- Pilih Barang --</option>
-            @foreach($items as $item)
-                <option value="{{ $item->id }}">{{ $item->name }} - Rp {{ number_format($item->rental_price, 0, ',', '.') }}/malam</option>
-            @endforeach
-        </select>
-        <input type="number" name="quantities[]" class="form-control me-2" placeholder="Jumlah" required>
-        <button type="button" class="btn btn-danger remove-item">Hapus</button>
+    @csrf
+
+    <div class="mb-3">
+        <label for="customer_name" class="form-label">Nama Penyewa</label>
+        <input type="text" class="form-control" id="customer_name" name="customer_name" required>
     </div>
-</div>
 
-<button type="button" class="btn btn-secondary mb-3" id="add-item">+ Tambah Barang</button>
+    <div class="mb-3">
+        <label for="customer_email" class="form-label">Email Penyewa (opsional)</label>
+        <input type="email" class="form-control" id="customer_email" name="customer_email">
+    </div>
 
+    <div class="mb-3">
+        <label for="customer_phone" class="form-label">No. HP Penyewa</label>
+        <input type="text" class="form-control" id="customer_phone" name="customer_phone" required>
+    </div>
 
+    <div class="mb-3">
+        <label for="customer_address" class="form-label">Alamat Penyewa</label>
+        <textarea class="form-control" id="customer_address" name="customer_address" rows="2" required></textarea>
+    </div>
 
-                    <div class="mb-3">
-                        <label for="rental_date" class="form-label">Tanggal Sewa</label>
-                        <input type="date" class="form-control" id="rental_date" name="rental_date" required>
-                    </div>
+    <div id="item-group">
+        <div class="item-row mb-3 d-flex align-items-center">
+            <select name="items[]" class="form-select me-2 item-select" required>
+                <option value="" disabled selected>-- Pilih Barang --</option>
+                @foreach($categories as $category)
+                    <optgroup label="{{ $category->name }}">
+                        @foreach($category->items as $item)
+                            <option value="{{ $item->id }}" data-price="{{ $item->rental_price }}">
+                                {{ $item->name }}
+                            </option>
+                        @endforeach
+                    </optgroup>
+                @endforeach
+            </select>
+            <input type="number" name="quantities[]" class="form-control me-2" placeholder="Jumlah" required>
+            <input type="number" name="prices[]" class="form-control me-2 price-input" placeholder="Harga" readonly>
+            <button type="button" class="btn btn-danger remove-item">Hapus</button>
+        </div>
+    </div>
 
-                    <div class="mb-3">
-                        <label for="return_date" class="form-label">Tanggal Kembali</label>
-                        <input type="date" class="form-control" id="return_date" name="return_date" required>
-                    </div>
+    <button type="button" class="btn btn-secondary mb-3" id="add-item">+ Tambah Barang</button>
 
-                    <div class="mb-3">
-                        <label for="status" class="form-label">Status</label>
-                        <select class="form-select" id="status" name="status" required>
-                            <option value="booked">Booked</option>
-                            <option value="ongoing">Ongoing</option>
-                            <option value="completed">Completed</option>
-                            <option value="cancelled">Cancelled</option>
-                        </select>
-                    </div>
+    <div class="mb-3">
+        <label for="rental_date" class="form-label">Tanggal Sewa</label>
+        <input type="date" class="form-control" id="rental_date" name="rental_date" required>
+    </div>
 
-                    <div class="mb-3">
-                        <label for="total_price" class="form-label">Total Harga (Rp)</label>
-                        <input type="number" class="form-control" id="total_price" name="total_price" required>
-                    </div>
+    <div class="mb-3">
+        <label for="return_date" class="form-label">Tanggal Kembali</label>
+        <input type="date" class="form-control" id="return_date" name="return_date" required>
+    </div>
 
-                    <button type="submit" class="btn btn-primary w-100">Simpan Pemesanan</button>
-                </form>
+    <div class="mb-3">
+        <label for="status" class="form-label">Status</label>
+        <select class="form-select" id="status" name="status" required>
+            <option value="booked">Booked</option>
+            <option value="ongoing">Ongoing</option>
+            <option value="completed">Completed</option>
+            <option value="cancelled">Cancelled</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label for="total_price" class="form-label">Total Harga (Rp)</label>
+        <input type="number" class="form-control" id="total_price" name="total_price" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Simpan Pemesanan</button>
+</form>
+
             </div>
         </div>
 
     </div>  
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+
+        setTimeout(function() {
+        var alert = document.getElementById('success-alert');
+        if (alert) {
+            var bsAlert = new bootstrap.Alert(alert);
+            bsAlert.close();
+        }
+    }, 3000);
+
 document.getElementById('add-item').addEventListener('click', function() {
     const itemGroup = document.getElementById('item-group');
     const newItemRow = itemGroup.firstElementChild.cloneNode(true);
     newItemRow.querySelector('select').value = '';
-    newItemRow.querySelector('input').value = '';
+    newItemRow.querySelector('input[name="quantities[]"]').value = '';
+    newItemRow.querySelector('input[name="prices[]"]').value = '';
     itemGroup.appendChild(newItemRow);
+});
+
+// Update harga otomatis saat barang dipilih
+document.addEventListener('change', function(e){
+    if(e.target && e.target.classList.contains('item-select')){
+        const selectedOption = e.target.selectedOptions[0];
+        const price = selectedOption.getAttribute('data-price');
+        const priceInput = e.target.closest('.item-row').querySelector('.price-input');
+        priceInput.value = price;
+    }
 });
 
 // Hapus row
@@ -87,6 +141,7 @@ document.addEventListener('click', function(e){
         e.target.closest('.item-row').remove();
     }
 });
+
 </script>
 
 </body>

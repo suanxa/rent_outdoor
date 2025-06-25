@@ -19,4 +19,9 @@ class SuryaItem extends Model
                     ->withPivot('quantity', 'subtotal_price')
                     ->withTimestamps();
     }
+
+        public function category()
+    {
+        return $this->belongsTo(SuryaCategory::class, 'category_id');
+    }
 }

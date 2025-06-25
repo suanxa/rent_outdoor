@@ -14,8 +14,10 @@ class SuryaCategorySeeder extends Seeder
      */
     public function run(): void
     {
-                SuryaCategory::create([
-            'name' => 'Camping',
+                SuryaCategory::insert([
+            ['name' => 'Camping'],
+            ['name' => 'Hiking'],
+            ['name' => 'Mountaineering'],
         ]);
     }
 }
