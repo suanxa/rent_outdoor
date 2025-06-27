@@ -10,6 +10,27 @@
 
     @include('partials.navbar')
 
+    <!-- Modal Diskon -->
+    @guest
+<div class="modal fade" id="diskonModal" tabindex="-1" aria-labelledby="diskonModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center">
+      <div class="modal-header">
+        <h5 class="modal-title w-100" id="diskonModalLabel">🎉 Diskon Spesial!</h5>
+      </div>
+      <div class="modal-body">
+        <p>Dapatkan <strong>diskon spesial</strong> dengan menjadi member dari <strong>Suanxa Rent Outdoor</strong>!</p>
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <a href="/register" class="btn btn-warning">Gabung Sekarang</a>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Nanti Saja</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@endguest   
+
     <div class="container mt-5 pt-5">
         <h1 class="mt-4 text-center">Form Booking Rental Outdoor</h1>
         <p class="text-center">Silakan isi data berikut untuk melakukan pemesanan sewa alat outdoor.</p>
@@ -20,13 +41,9 @@
     </div>
 @endif
 
-
-
-
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <form action="/rentals" method="POST">
-
 
     @csrf
 
@@ -108,13 +125,19 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 
+    // Tampilkan modal saat halaman load
+document.addEventListener('DOMContentLoaded', function () {
+    var diskonModal = new bootstrap.Modal(document.getElementById('diskonModal'));
+    diskonModal.show();
+});
+
         setTimeout(function() {
         var alert = document.getElementById('success-alert');
         if (alert) {
             var bsAlert = new bootstrap.Alert(alert);
             bsAlert.close();
         }
-    }, 3000);
+    }, 6000);
 
 document.getElementById('add-item').addEventListener('click', function() {
     const itemGroup = document.getElementById('item-group');

@@ -18,8 +18,10 @@ Route::get('/admin/customers', [SuryaUserController::class, 'adminIndex']);
 Route::get('/admin/items', [SuryaItemController::class, 'adminIndex']);
 Route::get('/admin/rentals', [SuryaRentalController::class, 'adminIndex']);
 
-
-
+//Akun
+Route::get('/register', [SuryaUserController::class, 'showRegisterForm']);
+Route::post('/register', [SuryaUserController::class, 'register']);
+Route::get('/logout', [SuryaUserController::class, 'logout']);
 
 
 // Route untuk halaman items

@@ -33,15 +33,31 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#kontak">Kontak</a>
                 </li>
+
+                @if(auth()->check())
+                <li class="nav-item dropdown">
+                    <a class="btn btn-primary dropdown-toggle ms-3" href="#" role="button" data-bs-toggle="dropdown">
+                        <img src="https://img.icons8.com/ios-glyphs/16/ffffff/user.png" class="me-1">
+                        {{ auth()->user()->name }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#">Profil</a></li>
+                        <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                    </ul>
+                </li>
+                @else
                 <li class="nav-item">
                     <a class="btn btn-primary ms-3" href="/admin-dashboard">
                         <img src="https://img.icons8.com/ios-glyphs/16/ffffff/user.png" class="me-1"> Login Admin
                     </a>
                 </li>
+                @endif
+
             </ul>
         </div>
     </div>
 </nav>
+
 
 <!-- Hero Section -->
 <div class="hero pt-5 d-flex align-items-center justify-content-center text-center" id="beranda">
