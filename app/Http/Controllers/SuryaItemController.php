@@ -22,6 +22,13 @@ class SuryaItemController extends Controller
         }
     }
 
+    public function adminIndex()
+{
+    $items = SuryaItem::with('category')->get();
+    return view('admin.item ', compact('items'));
+}
+
+
     /**
      * Show the form for creating a new resource.
      */

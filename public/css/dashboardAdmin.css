@@ -1,0 +1,35 @@
+
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Poppins', sans-serif;
+        }
+        .sidebar {
+            height: 100vh;
+            background-color: #343a40;
+            color: #fff;
+        }
+        .sidebar a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            padding: 15px 20px;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background-color: #495057;
+            border-left: 4px solid #ffc107;
+        }
+        .content {
+            padding: 30px;
+        }
+        .card-custom {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+        .card-custom:hover {
+            transform: translateY(-5px);
+        }
+        .card-custom h4 {
+            margin-bottom: 0;
+        }

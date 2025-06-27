@@ -4,38 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Suanxa Rent Outdoor</title>
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            scroll-behavior: smooth;
-        }
-        .hero {
-            background: url('https://images.unsplash.com/photo-1553440569-bcc63803a83d?auto=format&fit=crop&w=1600&q=80') no-repeat center center/cover;
-            color: white;
-            height: 100vh;
-            position: relative;
-        }
-        .hero-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.6);
-        }
-        .hero-content {
-            position: relative;
-            z-index: 2;
-        }
-        .section {
-            padding: 80px 0;
-        }
-        .nav-link.active {
-            color: #ffc107 !important;
-            font-weight: bold;
-        }
-    </style>
 </head>
 <body>
 
@@ -64,7 +34,7 @@
                     <a class="nav-link" href="#kontak">Kontak</a>
                 </li>
                 <li class="nav-item">
-                    <a class="btn btn-primary ms-3" href="/login">
+                    <a class="btn btn-primary ms-3" href="/admin-dashboard">
                         <img src="https://img.icons8.com/ios-glyphs/16/ffffff/user.png" class="me-1"> Login Admin
                     </a>
                 </li>
@@ -173,38 +143,8 @@
         <p class="mb-0">&copy; {{ date('Y') }} Suanxa Rent Outdoor. All Rights Reserved.</p>
     </div>
 </footer>
-
-<!-- Script Highlight Menu -->
-<script>
-    const sections = document.querySelectorAll(".hero, .section");
-    const navLinks = document.querySelectorAll(".nav-link");
-
-    window.addEventListener("scroll", () => {
-    let current = "";
-
-    sections.forEach((section) => {
-        const sectionTop = section.offsetTop - 120;
-        if (pageYOffset >= sectionTop) {
-            current = section.getAttribute("id");
-        }
-    });
-
-    // Kalau udah mentok bawah, paksa highlight menu Kontak
-    if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight - 2) {
-        current = "kontak";
-    }
-
-    navLinks.forEach((link) => {
-        link.classList.remove("active");
-        if (link.getAttribute("href") === "#" + current) {
-            link.classList.add("active");
-        }
-    });
-});
-
-</script>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ asset('scriptJS/script.js') }}"></script>
 
 </body>
 </html>

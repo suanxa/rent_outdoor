@@ -8,6 +8,16 @@ Route::get('/', function () {
     return view('landing');
 });
 
+//Admin
+Route::get('/admin-dashboard', function () {
+    return view('admin.adminDashboard');
+});
+
+Route::get('/admin/items', [SuryaItemController::class, 'adminIndex']);
+
+
+
+
 // Route untuk halaman items
 Route::get('/items', [SuryaItemController::class, 'index']);
 
