@@ -15,6 +15,12 @@ class SuryaUserController extends Controller
         //
     }
 
+        public function adminIndex()
+    {
+        $users = SuryaUser::all();
+        return view('admin.customer', compact('users'));
+    }
+
     /**
      * Show the form for creating a new resource.
      */

@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\SuryaRentalController;
 use App\Http\Controllers\SuryaItemController;
+use App\Http\Controllers\SuryaUserController;
+
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -12,8 +14,10 @@ Route::get('/', function () {
 Route::get('/admin-dashboard', function () {
     return view('admin.adminDashboard');
 });
-
+Route::get('/admin/customers', [SuryaUserController::class, 'adminIndex']);
 Route::get('/admin/items', [SuryaItemController::class, 'adminIndex']);
+Route::get('/admin/rentals', [SuryaRentalController::class, 'adminIndex']);
+
 
 
 

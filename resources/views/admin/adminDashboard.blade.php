@@ -14,9 +14,9 @@
     <div class="sidebar p-3">
         <h3 class="text-center mb-4">Admin Panel</h3>
         <a href="/admin-dashboard" class="{{ Request::is('admin-dashboard') ? 'active' : '' }}">Dashboard</a>
-        <a href="/customers" class="{{ Request::is('customers') ? 'active' : '' }}">Customer</a>
+        <a href="/admin/customers" class="{{ Request::is('admin/customers') ? 'active' : '' }}">Customer</a>
         <a href="/admin/items" class="{{ Request::is('admin/items') ? 'active' : '' }}">Item</a>
-        <a href="/rentals" class="{{ Request::is('rentals') ? 'active' : '' }}">Rental</a>
+        <a href="/admin/rentals" class="{{ Request::is('admin/rentals') ? 'active' : '' }}">Rental</a>
         <a href="/" class="mt-5 text-warning">← Kembali ke Beranda</a>
     </div>
 
@@ -34,7 +34,7 @@
                     <img src="https://img.icons8.com/ios-filled/64/000000/user-group-man-man.png" alt="Customer">
                     <h4 class="mt-3">Customer</h4>
                     <p class="text-muted">Kelola data penyewa outdoor</p>
-                    <a href="/customers" class="btn btn-outline-primary">Lihat Data</a>
+                    <a href="/admin/customers" class="btn btn-outline-primary">Lihat Data</a>
                 </div>
             </div>
             <div class="col-md-4">
@@ -50,7 +50,7 @@
                     <img src="https://img.icons8.com/ios-filled/64/000000/reservation.png" alt="Rental">
                     <h4 class="mt-3">Rental</h4>
                     <p class="text-muted">Kelola data pemesanan rental</p>
-                    <a href="/rentals" class="btn btn-outline-primary">Lihat Data</a>
+                    <a href="/admin/rentals" class="btn btn-outline-primary">Lihat Data</a>
                 </div>
             </div>
         </div>

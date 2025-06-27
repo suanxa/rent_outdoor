@@ -72,6 +72,13 @@ public function store(Request $request)
       return redirect()->back()->with('success', 'Booking berhasil disimpan!');
 }
 
+public function adminIndex()
+{
+    $rentals = SuryaRental::with('customer', 'items')->get();  // pastikan relasi customer & items dibuat
+    return view('admin.rental', compact('rentals'));
+}
+
+
 
     /**
      * Display the specified resource.
