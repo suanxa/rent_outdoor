@@ -99,7 +99,7 @@
         <input type="date" class="form-control" id="return_date" name="return_date" required>
     </div>
 
-    <div class="mb-3">
+    {{-- <div class="mb-3">
         <label for="status" class="form-label">Status</label>
         <select class="form-select" id="status" name="status" required>
             <option value="booked">Booked</option>
@@ -107,44 +107,66 @@
             <option value="completed">Completed</option>
             <option value="cancelled">Cancelled</option>
         </select>
-    </div>
+    </div> --}}
 
-    <div class="mb-3">
+    {{-- <div class="mb-3">
         <label for="total_price" class="form-label">Total Harga (Rp)</label>
         <input type="number" class="form-control" id="total_price" name="total_price" required>
-    </div>
+    </div> --}}
+    
+    <div class="mb-3">
+    <label for="total_price" class="form-label">Total Harga</label>
+    <input type="text" class="form-control" id="total_price" name="total_price" readonly required>
+</div>
 
-    <button type="submit" class="btn btn-primary w-100">Simpan Pemesanan</button>
+<small class="text-muted">
+    @auth
+    Diskon member 25% sudah diterapkan secara otomatis.
+    @endauth
+</small>
+
+
+
+    <button type="submit" class="btn btn-primary w-100">Booking</button>
 </form>
 
             </div>
         </div>
-
     </div>  
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 
-    // Tampilkan modal saat halaman load
+// Kirim status login dari Blade ke JavaScript
+var isLoggedIn = {{ auth()->check() ? 'true' : 'false' }};
+// Tampilkan modal saat halaman load
 document.addEventListener('DOMContentLoaded', function () {
     var diskonModal = new bootstrap.Modal(document.getElementById('diskonModal'));
     diskonModal.show();
 });
 
-        setTimeout(function() {
-        var alert = document.getElementById('success-alert');
-        if (alert) {
-            var bsAlert = new bootstrap.Alert(alert);
-            bsAlert.close();
-        }
-    }, 6000);
+setTimeout(function() {
+    var alert = document.getElementById('success-alert');
+    if (alert) {
+        var bsAlert = new bootstrap.Alert(alert);
+        bsAlert.close();
+    }
+}, 6000);
 
+// Fungsi format Rupiah
+function formatRupiah(angka) {
+    return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+// Tambah item baru
 document.getElementById('add-item').addEventListener('click', function() {
     const itemGroup = document.getElementById('item-group');
     const newItemRow = itemGroup.firstElementChild.cloneNode(true);
+
     newItemRow.querySelector('select').value = '';
     newItemRow.querySelector('input[name="quantities[]"]').value = '';
     newItemRow.querySelector('input[name="prices[]"]').value = '';
+
     itemGroup.appendChild(newItemRow);
 });
 
@@ -155,15 +177,54 @@ document.addEventListener('change', function(e){
         const price = selectedOption.getAttribute('data-price');
         const priceInput = e.target.closest('.item-row').querySelector('.price-input');
         priceInput.value = price;
+
+        hitungTotal();
     }
 });
 
-// Hapus row
+// Hapus row item
 document.addEventListener('click', function(e){
     if(e.target && e.target.classList.contains('remove-item')){
         e.target.closest('.item-row').remove();
+        hitungTotal();
     }
 });
+
+// Hitung total saat quantity diubah
+document.addEventListener('input', function(e){
+    if(e.target && e.target.name === 'quantities[]'){
+        hitungTotal();
+    }
+});
+
+// Fungsi hitung total harga
+function hitungTotal(){
+    const itemRows = document.querySelectorAll('.item-row');
+    let total = 0;
+
+    itemRows.forEach(function(row){
+        const price = parseFloat(row.querySelector('.price-input').value) || 0;
+        const quantity = parseFloat(row.querySelector('input[name="quantities[]"]').value) || 0;
+        total += price * quantity;
+    });
+
+    // Hitung diskon kalau user login
+    let finalTotal = total;
+    if (isLoggedIn) {
+        finalTotal = total - (total * 0.25);
+    }
+
+    document.getElementById('total_price').value = formatRupiah(finalTotal);
+}
+
+
+document.querySelector('form').addEventListener('submit', function(e) {
+    const totalInput = document.getElementById('total_price');
+    // Hapus "Rp " dan titik
+    const cleanValue = totalInput.value.replace(/[^0-9]/g, '');
+    totalInput.value = cleanValue;
+});
+
 
 </script>
 

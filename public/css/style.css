@@ -4,7 +4,7 @@ body {
 }
 
 .hero {
-    background: url('https://images.unsplash.com/photo-1553440569-bcc63803a83d?auto=format&fit=crop&w=1600&q=80') no-repeat center center/cover;
+    background: url('../images/dashboard.jpeg') no-repeat center center/cover;
     color: white;
     height: 100vh;
     position: relative;
@@ -16,7 +16,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.6);
+    background: rgba(0,0,0,0.2);
 }
 
 .hero-content {

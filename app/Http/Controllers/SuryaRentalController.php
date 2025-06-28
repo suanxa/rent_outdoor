@@ -43,15 +43,16 @@ public function store(Request $request)
 
 
     // 2. Simpan ke tabel rentals
-    $user = auth()->user();
-    $rental = SuryaRental::create([
-        'customer_id' => $customer->id,
-        'user_id'     => $user->id, // misal admin login
-        'rental_date' => $request->rental_date,
-        'return_date' => $request->return_date,
-        'status'      => $request->status,
-        'total_price' => $request->total_price,
-    ]);
+$user = auth()->user();
+$rental = SuryaRental::create([
+    'customer_id' => $customer->id,
+    'user_id'     => $user ? $user->id : null, // kalau ga login, isi null
+    'rental_date' => $request->rental_date,
+    'return_date' => $request->return_date,
+    'status'      => 'booked',
+    'total_price' => $request->total_price,
+]);
+
 
     // 3. Simpan barang rental ke tabel surya_rental_items
     foreach ($request->items as $key => $itemId) {

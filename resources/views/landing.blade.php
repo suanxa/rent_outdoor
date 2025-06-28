@@ -13,7 +13,7 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow">
     <div class="container">
         <a class="navbar-brand fw-bold" href="#beranda">
-            <img src="https://img.icons8.com/external-flat-juicy-fish/32/ffffff/external-backpack-travel-flat-flat-juicy-fish.png" alt="Logo" width="32" class="me-2">
+            <img src="{{ asset('images/suanxashop.png') }}" alt="Logo" width="40" class="me-1">
             Suanxa Outdoor
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -37,7 +37,7 @@
                 @if(auth()->check())
                 <li class="nav-item dropdown">
                     <a class="btn btn-primary dropdown-toggle ms-3" href="#" role="button" data-bs-toggle="dropdown">
-                        <img src="https://img.icons8.com/ios-glyphs/16/ffffff/user.png" class="me-1">
+                        <img src="{{ asset('images/suanxashop.png') }}" class="me-1">
                         {{ auth()->user()->name }}
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
@@ -64,7 +64,7 @@
     <div class="hero-overlay"></div>
     <div class="container hero-content">
         <h1 class="display-3 fw-bold">Suanxa Rent Outdoor</h1>
-        <p class="lead">Sewa perlengkapan camping, hiking, dan outdoor adventure terbaik di kota Anda!</p>
+        <p class="lead">Explore Nature Easily</p>
         <a href="/rentals" class="btn btn-primary btn-lg mt-3">Mulai Sewa Sekarang</a>
     </div>
 </div>
