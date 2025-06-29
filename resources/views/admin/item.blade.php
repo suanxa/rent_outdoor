@@ -4,7 +4,7 @@
 <div class="container mt-1">
     <h1 class="mb-4">Data Barang Sewa</h1>
 
-    <a href="#" class="btn btn-success mb-3">+ Tambah Barang</a>
+    <a href="/admin/items/create" class="btn btn-success mb-3">+ Tambah Barang</a>
 
     <table class="table table-hover table-bordered">
         <thead class="table-dark">
@@ -31,11 +31,15 @@
                 <td>{{ $item->stock }}</td>
                 <td>{{ $item->description }}</td>
                 <td>
-                    <img src="{{ asset('storage/' . $item->image) }}" alt="Gambar" width="60">
+                    @if($item->image)
+                        <img src="{{ asset('storage/' . $item->image) }}" alt="Gambar" width="60">
+                    @else
+                        <img src="https://via.placeholder.com/60x60?text=No+Image" alt="No Image">
+                    @endif
                 </td>
                 <td>
-                    <a href="#" class="btn btn-sm btn-primary">Edit</a>
-                    <form action="#" method="POST" class="d-inline">
+                    <a href="/admin/items/{{ $item->id }}/edit" class="btn btn-sm btn-primary mb-1">Edit</a>
+                    <form action="/admin/items/{{ $item->id }}" method="POST" class="d-inline">
                         @csrf
                         @method('DELETE')
                         <button class="btn btn-sm btn-danger" onclick="return confirm('Yakin hapus barang ini?')">Hapus</button>

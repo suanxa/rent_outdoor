@@ -17,7 +17,11 @@
         <a href="/admin/customers" class="{{ Request::is('admin/customers') ? 'active' : '' }}">Customer</a>
         <a href="/admin/items" class="{{ Request::is('admin/items') ? 'active' : '' }}">Item</a>
         <a href="/admin/rentals" class="{{ Request::is('admin/rentals') ? 'active' : '' }}">Rental</a>
-        <a href="/" class="mt-5 text-warning">← Kembali ke Beranda</a>
+        <form action="{{ route('logout') }}" method="POST" class="mt-5">
+    @csrf
+    <button type="submit" class="btn btn-link text-warning p-0" style="text-decoration: none;">← Kembali ke Beranda</button>
+</form>
+
     </div>
 
     <!-- Main Content -->

@@ -35,19 +35,24 @@
                 </li>
 
                 @if(auth()->check())
-                <li class="nav-item dropdown">
-                    <a class="btn btn-primary dropdown-toggle ms-3" href="#" role="button" data-bs-toggle="dropdown">
-                        <img src="{{ asset('images/suanxashop.png') }}" class="me-1">
-                        {{ auth()->user()->name }}
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#">Profil</a></li>
-                        <li><a class="dropdown-item" href="/logout">Logout</a></li>
-                    </ul>
-                </li>
+<li class="nav-item dropdown">
+    <a class="btn btn-primary dropdown-toggle ms-3" href="#" role="button" data-bs-toggle="dropdown">
+        <img src="{{ asset('images/suanxashop.png') }}" class="me-1">
+        {{ auth()->user()->name }}
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end">
+        <li><a class="dropdown-item" href="#">Profil</a></li>
+        <li>
+            <form action="{{ route('logout') }}" method="POST">
+                @csrf
+                <button type="submit" class="dropdown-item">Logout</button>
+            </form>
+        </li>
+    </ul>
+</li>
                 @else
                 <li class="nav-item">
-                    <a class="btn btn-primary ms-3" href="/admin-dashboard">
+                    <a class="btn btn-primary ms-3" href="/login">
                         <img src="https://img.icons8.com/ios-glyphs/16/ffffff/user.png" class="me-1"> Login Admin
                     </a>
                 </li>

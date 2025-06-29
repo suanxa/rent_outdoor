@@ -10,7 +10,16 @@ class SuryaItem extends Model
     use HasFactory;
 
     protected $table = 'surya_items';
-    protected $guarded = [];
+    protected $fillable = [
+    'name',
+    'category_id',
+    'brand',
+    'rental_price',
+    'stock',
+    'description',
+    'image'
+];
+
 
     // Relasi ke SuryaRental via tabel pivot surya_rental_items
     public function rentals()
