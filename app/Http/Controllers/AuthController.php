@@ -31,7 +31,7 @@ class AuthController extends Controller
 
             // Cek role user yang login
             if (Auth::user()->role === 'admin') {
-                return redirect()->route('admin.adminDashboard'); // Lebih baik pakai named route
+                return redirect()->route('admin.dashboard'); // Lebih baik pakai named route
             } else {
                 return redirect()->route('landing');
             }

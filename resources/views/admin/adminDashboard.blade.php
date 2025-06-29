@@ -13,7 +13,7 @@
     <!-- Sidebar -->
     <div class="sidebar p-3">
         <h3 class="text-center mb-4">Admin Panel</h3>
-        <a href="/admin-dashboard" class="{{ Request::is('admin-dashboard') ? 'active' : '' }}">Dashboard</a>
+        <a href="{{ route('admin.dashboard') }}" class="{{ Request::is('admin/dashboard') ? 'active' : '' }}">Dashboard</a>
         <a href="/admin/customers" class="{{ Request::is('admin/customers') ? 'active' : '' }}">Customer</a>
         <a href="/admin/items" class="{{ Request::is('admin/items') ? 'active' : '' }}">Item</a>
         <a href="/admin/rentals" class="{{ Request::is('admin/rentals') ? 'active' : '' }}">Rental</a>

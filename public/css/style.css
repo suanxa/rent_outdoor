@@ -3,11 +3,17 @@ body {
     scroll-behavior: smooth;
 }
 
+.navbar {
+    z-index: 1050;
+    position: relative;
+}
+
 .hero {
     background: url('../images/dashboard.jpeg') no-repeat center center/cover;
     color: white;
     height: 100vh;
     position: relative;
+    z-index: 10;
 }
 
 .hero-overlay {
@@ -17,11 +23,12 @@ body {
     width: 100%;
     height: 100%;
     background: rgba(0,0,0,0.2);
+    z-index: 5;
 }
 
 .hero-content {
     position: relative;
-    z-index: 2;
+    z-index: 20;
 }
 
 .section {
@@ -32,3 +39,11 @@ body {
     color: #ffc107 !important;
     font-weight: bold;
 }
+
+.navbar-profile-pic {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
