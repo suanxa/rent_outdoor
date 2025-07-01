@@ -58,43 +58,65 @@ public function store(Request $request)
 {
     // 1. Simpan ke tabel customers
     $customer = SuryaCustomer::create([
-    'name' => $request->customer_name,
-    'email' => $request->customer_email,
-    'phone' => $request->customer_phone,
-    'address' => $request->customer_address,
-]);
-
+        'name'    => $request->customer_name,
+        'email'   => $request->customer_email,
+        'phone'   => $request->customer_phone,
+        'address' => $request->customer_address,
+    ]);
 
     // 2. Simpan ke tabel rentals
-$user = auth()->user();
-$rental = SuryaRental::create([
-    'customer_id' => $customer->id,
-    'user_id'     => $user ? $user->id : null, // kalau ga login, isi null
-    'rental_date' => $request->rental_date,
-    'return_date' => $request->return_date,
-    'status'      => 'booked',
-    'total_price' => $request->total_price,
-]);
-
+    $user = auth()->user();
+    $rental = SuryaRental::create([
+        'customer_id' => $customer->id,
+        'user_id'     => $user ? $user->id : null,
+        'rental_date' => $request->rental_date,
+        'return_date' => $request->return_date,
+        'status'      => 'booked',
+        'total_price' => $request->total_price,
+    ]);
 
     // 3. Simpan barang rental ke tabel surya_rental_items
+    $itemsData = [];
     foreach ($request->items as $key => $itemId) {
         $quantity = $request->quantities[$key];
-        $item = SuryaItem::findOrFail($itemId);
+        $item     = SuryaItem::findOrFail($itemId);
         $subtotal = $item->rental_price * $quantity;
 
         DB::table('surya_rental_items')->insert([
-            'rental_id'      => $rental->id,
-            'item_id'        => $itemId,
-            'quantity'       => $quantity,
+            'rental_id'  => $rental->id,
+            'item_id'    => $itemId,
+            'quantity'   => $quantity,
+            'subtotal'   => $subtotal,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $itemsData[] = [
+            'name'     => $item->name,
+            'quantity' => $quantity,
+            'price'    => $item->rental_price,
             'subtotal' => $subtotal,
-            'created_at'     => now(),
-            'updated_at'     => now(),
+        ];
+    }
+
+    // 4. Kalau request AJAX, balikan JSON
+    if ($request->ajax()) {
+        return response()->json([
+            'customer_name'    => $customer->name,
+            'customer_email'   => $customer->email,
+            'customer_phone'   => $customer->phone,
+            'customer_address' => $customer->address,
+            'rental_date'      => $rental->rental_date,
+            'return_date'      => $rental->return_date,
+            'total_price'      => $rental->total_price,
+            'items'            => $itemsData,
         ]);
     }
 
-      return redirect()->back()->with('success', 'Booking berhasil disimpan!');
+    // 5. Kalau bukan AJAX, redirect biasa
+    return redirect()->back()->with('success', 'Booking berhasil disimpan!');
 }
+
 
 public function adminIndex()
 {

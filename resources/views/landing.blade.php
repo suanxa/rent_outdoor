@@ -1,15 +1,10 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Suanxa Rent Outdoor</title>
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+@extends('layouts.app')
 
-<!-- Navbar -->
+@section('title', 'Beranda')
+
+@section('content')
+
+{{-- <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top shadow">
     <div class="container">
         <a class="navbar-brand fw-bold" href="{{ url('/') }}#beranda">
@@ -61,7 +56,7 @@
             </ul>
         </div>
     </div>
-</nav>
+</nav> --}}
 
 <!-- Hero Section -->
 <div class="hero pt-5 d-flex align-items-center justify-content-center text-center" id="beranda">
@@ -156,15 +151,15 @@
         </form>
     </div>
 </div>
-
+{{-- 
 <!-- Footer -->
 <footer class="bg-dark text-white py-4 text-center">
     <div class="container">
         <p class="mb-0">&copy; {{ date('Y') }} Suanxa Rent Outdoor. All Rights Reserved.</p>
     </div>
-</footer>
+</footer> --}}
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{{ asset('scriptJS/script.js') }}"></script>
 
 <!-- Smooth scroll ke anchor jika ada -->
@@ -177,7 +172,22 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 });
+</script> --}}
+
+@push('scripts')
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    if (window.location.hash) {
+      const target = document.querySelector(window.location.hash);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  });
 </script>
+@endpush
+
+@endsection
 
 </body>
 </html>

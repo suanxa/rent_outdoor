@@ -1,17 +1,8 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Suanxa | Booking Rental</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
+@extends('layouts.app')
+@section('title', 'Booking Rental')
+@section('content')
 
-    @include('partials.navbar')
-
-    <!-- Modal Diskon -->
-    @guest
+@guest
 <div class="modal fade" id="diskonModal" tabindex="-1" aria-labelledby="diskonModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content text-center">
@@ -28,205 +19,260 @@
     </div>
   </div>
 </div>
+@endguest
 
-@endguest   
+<div class="container mt-5 pt-5">
+  <h1 class="mt-4 text-center">Form Booking Rental Outdoor</h1>
+  <p class="text-center">Silakan isi data berikut untuk melakukan pemesanan sewa alat outdoor.</p>
 
-    <div class="container mt-5 pt-5">
-        <h1 class="mt-4 text-center">Form Booking Rental Outdoor</h1>
-        <p class="text-center">Silakan isi data berikut untuk melakukan pemesanan sewa alat outdoor.</p>
-@if(session('success'))
-    <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
-        {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-@endif
+  @if(session('success'))
+  <div id="success-alert" class="alert alert-success alert-dismissible fade show" role="alert">
+    {{ session('success') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  @endif
 
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <form action="/rentals" method="POST">
-
-    @csrf
-
-    <div class="mb-3">
-        <label for="customer_name" class="form-label">Nama Penyewa</label>
-        <input type="text" class="form-control" id="customer_name" name="customer_name" required>
-    </div>
-
-    <div class="mb-3">
-        <label for="customer_email" class="form-label">Email Penyewa (opsional)</label>
-        <input type="email" class="form-control" id="customer_email" name="customer_email">
-    </div>
-
-    <div class="mb-3">
-        <label for="customer_phone" class="form-label">No. HP Penyewa</label>
-        <input type="text" class="form-control" id="customer_phone" name="customer_phone" required>
-    </div>
-
-    <div class="mb-3">
-        <label for="customer_address" class="form-label">Alamat Penyewa</label>
-        <textarea class="form-control" id="customer_address" name="customer_address" rows="2" required></textarea>
-    </div>
-
-    <div id="item-group">
-        <div class="item-row mb-3 d-flex align-items-center">
-            <select name="items[]" class="form-select me-2 item-select" required>
-                <option value="" disabled selected>-- Pilih Barang --</option>
-                @foreach($categories as $category)
-                    <optgroup label="{{ $category->name }}">
-                        @foreach($category->items as $item)
-                            <option value="{{ $item->id }}" data-price="{{ $item->rental_price }}">
-                                {{ $item->name }}
-                            </option>
-                        @endforeach
-                    </optgroup>
-                @endforeach
-            </select>
-            <input type="number" name="quantities[]" class="form-control me-2" placeholder="Jumlah" required>
-            <input type="number" name="prices[]" class="form-control me-2 price-input" placeholder="Harga" readonly>
-            <button type="button" class="btn btn-danger remove-item">Hapus</button>
-        </div>
-    </div>
-
-    <button type="button" class="btn btn-secondary mb-3" id="add-item">+ Tambah Barang</button>
-
-    <div class="mb-3">
-        <label for="rental_date" class="form-label">Tanggal Sewa</label>
-        <input type="date" class="form-control" id="rental_date" name="rental_date" required>
-    </div>
-
-    <div class="mb-3">
-        <label for="return_date" class="form-label">Tanggal Kembali</label>
-        <input type="date" class="form-control" id="return_date" name="return_date" required>
-    </div>
-
-    {{-- <div class="mb-3">
-        <label for="status" class="form-label">Status</label>
-        <select class="form-select" id="status" name="status" required>
-            <option value="booked">Booked</option>
-            <option value="ongoing">Ongoing</option>
-            <option value="completed">Completed</option>
-            <option value="cancelled">Cancelled</option>
-        </select>
-    </div> --}}
-
-    {{-- <div class="mb-3">
-        <label for="total_price" class="form-label">Total Harga (Rp)</label>
-        <input type="number" class="form-control" id="total_price" name="total_price" required>
-    </div> --}}
-    
-    <div class="mb-3">
-    <label for="total_price" class="form-label">Total Harga</label>
-    <input type="text" class="form-control" id="total_price" name="total_price" readonly required>
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <form id="bookingForm" method="POST" action="/rentals">
+        @csrf
+<div class="mb-3">
+  <label class="form-label">Nama Penyewa</label>
+  <input type="text" class="form-control" name="customer_name" 
+         value="@auth{{ auth()->user()->name }}@endauth"
+         @auth readonly @endauth required>
 </div>
 
-<small class="text-muted">
-    @auth
-    Diskon member 25% sudah diterapkan secara otomatis.
-    @endauth
-</small>
+<div class="mb-3">
+  <label class="form-label">Email Penyewa (opsional)</label>
+  <input type="email" class="form-control" name="customer_email"
+         value="@auth{{ auth()->user()->email }}@endauth"
+         @auth readonly @endauth>
+</div>
 
 
-
-    <button type="submit" class="btn btn-primary w-100">Booking</button>
-</form>
-
-            </div>
+        <div class="mb-3">
+          <label class="form-label">No. HP Penyewa</label>
+          <input type="text" class="form-control" name="customer_phone" required>
         </div>
-    </div>  
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <div class="mb-3">
+          <label class="form-label">Alamat Penyewa</label>
+          <textarea class="form-control" name="customer_address" rows="2" required></textarea>
+        </div>
+
+        <div id="item-group">
+          <div class="item-row mb-3 d-flex align-items-center">
+            <select name="items[]" class="form-select me-2 item-select" required>
+              <option value="" disabled selected>-- Pilih Barang --</option>
+              @foreach($categories as $category)
+              <optgroup label="{{ $category->name }}">
+                @foreach($category->items as $item)
+                <option value="{{ $item->id }}" data-price="{{ $item->rental_price }}">
+                  {{ $item->name }}
+                </option>
+                @endforeach
+              </optgroup>
+              @endforeach
+            </select>
+            <input type="number" name="quantities[]" class="form-control me-2" placeholder="Jumlah" required>
+            <input type="number" class="form-control me-2 price-input" placeholder="Harga" readonly>
+            <button type="button" class="btn btn-danger remove-item">Hapus</button>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-secondary mb-3" id="add-item">+ Tambah Barang</button>
+
+        <div class="mb-3">
+          <label class="form-label">Tanggal Sewa</label>
+          <input type="date" class="form-control" name="rental_date" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Tanggal Kembali</label>
+          <input type="date" class="form-control" name="return_date" required>
+        </div>
+
+        <div class="mb-3">
+  <label class="form-label">Total Harga</label>
+  <input type="text" class="form-control" id="total_price_display" readonly>
+  <input type="hidden" id="total_price" name="total_price" required>
+</div>
+
+
+        <small class="text-muted">
+          @auth
+          Diskon member 25% sudah diterapkan otomatis.
+          @endauth
+        </small>
+
+        <button type="submit" class="btn btn-primary w-100">Booking</button>
+      </form>
+      <!-- Modal Struk -->
+<div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Struk Booking</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="receiptContent">
+        <!-- isi struk nanti diisi via JavaScript -->
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" onclick="window.print()">Print Struk</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    </div>
+  </div>
+</div>
+
+@endsection
+
+@push('scripts')
 <script>
-
-// Kirim status login dari Blade ke JavaScript
 var isLoggedIn = {{ auth()->check() ? 'true' : 'false' }};
-// Tampilkan modal saat halaman load
+
 document.addEventListener('DOMContentLoaded', function () {
-    var diskonModal = new bootstrap.Modal(document.getElementById('diskonModal'));
-    diskonModal.show();
+  var diskonModal = document.getElementById('diskonModal');
+  if (diskonModal) {
+    new bootstrap.Modal(diskonModal).show();
+  }
 });
 
-setTimeout(function() {
-    var alert = document.getElementById('success-alert');
-    if (alert) {
-        var bsAlert = new bootstrap.Alert(alert);
-        bsAlert.close();
-    }
+setTimeout(() => {
+  var alert = document.getElementById('success-alert');
+  if (alert) {
+    new bootstrap.Alert(alert).close();
+  }
 }, 6000);
 
-// Fungsi format Rupiah
+// Format Rupiah tanpa desimal
 function formatRupiah(angka) {
-    return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  return 'Rp ' + angka.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 }
 
-// Tambah item baru
+
+// Tambah barang
 document.getElementById('add-item').addEventListener('click', function() {
-    const itemGroup = document.getElementById('item-group');
-    const newItemRow = itemGroup.firstElementChild.cloneNode(true);
-
-    newItemRow.querySelector('select').value = '';
-    newItemRow.querySelector('input[name="quantities[]"]').value = '';
-    newItemRow.querySelector('input[name="prices[]"]').value = '';
-
-    itemGroup.appendChild(newItemRow);
+  const itemGroup = document.getElementById('item-group');
+  const newRow = itemGroup.firstElementChild.cloneNode(true);
+  newRow.querySelector('select').value = '';
+  newRow.querySelector('input[name="quantities[]"]').value = '';
+  newRow.querySelector('.price-input').value = '';
+  itemGroup.appendChild(newRow);
 });
 
-// Update harga otomatis saat barang dipilih
+// Harga otomatis
 document.addEventListener('change', function(e){
-    if(e.target && e.target.classList.contains('item-select')){
-        const selectedOption = e.target.selectedOptions[0];
-        const price = selectedOption.getAttribute('data-price');
-        const priceInput = e.target.closest('.item-row').querySelector('.price-input');
-        priceInput.value = price;
-
-        hitungTotal();
-    }
+  if(e.target.classList.contains('item-select')){
+    const price = e.target.selectedOptions[0].getAttribute('data-price');
+    e.target.closest('.item-row').querySelector('.price-input').value = price;
+    hitungTotal();
+  }
 });
 
-// Hapus row item
+// Hapus barang
 document.addEventListener('click', function(e){
-    if(e.target && e.target.classList.contains('remove-item')){
-        e.target.closest('.item-row').remove();
-        hitungTotal();
-    }
+  if(e.target.classList.contains('remove-item')){
+    e.target.closest('.item-row').remove();
+    hitungTotal();
+  }
 });
 
-// Hitung total saat quantity diubah
+// Hitung total otomatis
 document.addEventListener('input', function(e){
-    if(e.target && e.target.name === 'quantities[]'){
-        hitungTotal();
-    }
+  if(e.target.name === 'quantities[]'){
+    hitungTotal();
+  }
 });
 
-// Fungsi hitung total harga
 function hitungTotal(){
-    const itemRows = document.querySelectorAll('.item-row');
-    let total = 0;
+  const itemRows = document.querySelectorAll('.item-row');
+  let total = 0;
 
-    itemRows.forEach(function(row){
-        const price = parseFloat(row.querySelector('.price-input').value) || 0;
-        const quantity = parseFloat(row.querySelector('input[name="quantities[]"]').value) || 0;
-        total += price * quantity;
+  itemRows.forEach(function(row){
+    const price = parseFloat(row.querySelector('.price-input').value) || 0;
+    const quantity = parseFloat(row.querySelector('input[name="quantities[]"]').value) || 0;
+    total += price * quantity;
+  });
+
+  // Diskon kalau user login
+  let finalTotal = total;
+  if (isLoggedIn) {
+    finalTotal = total - (total * 0.25);
+  }
+
+  // Tampilkan ke user
+  document.getElementById('total_price_display').value = formatRupiah(finalTotal);
+
+  // Simpan ke input hidden
+  document.getElementById('total_price').value = finalTotal;
+}
+
+// Booking POP UP
+document.getElementById('bookingForm').addEventListener('submit', function(e){
+  e.preventDefault();
+
+  let form = e.target;
+  let formData = new FormData(form);
+
+fetch('/rentals', {
+  method: 'POST',
+  headers: {
+    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+    'X-Requested-With': 'XMLHttpRequest'  // <-- ini wajib biar $request->ajax() kebaca true
+  },
+  body: formData
+})
+
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Network response error');
+    }
+    return response.json();
+  })
+  .then(data => {
+    // Tampilkan data ke modal struk
+    let itemsHTML = '';
+    data.items.forEach(item => {
+      itemsHTML += `<p>${item.name} (x${item.quantity}) - Rp ${Number(item.subtotal).toLocaleString('id-ID')}</p>`;
     });
 
-    // Hitung diskon kalau user login
-    let finalTotal = total;
-    if (isLoggedIn) {
-        finalTotal = total - (total * 0.25);
-    }
+    let content = `
+      <p><strong>Nama:</strong> ${data.customer_name}</p>
+      <p><strong>Email:</strong> ${data.customer_email}</p>
+      <p><strong>No HP:</strong> ${data.customer_phone}</p>
+      <p><strong>Alamat:</strong> ${data.customer_address}</p>
+      <p><strong>Tanggal Sewa:</strong> ${data.rental_date}</p>
+      <p><strong>Tanggal Kembali:</strong> ${data.return_date}</p>
+      <hr>
+      <p><strong>Barang Disewa:</strong></p>
+      ${itemsHTML}
+      <hr>
+      <p><strong>Total Harga:</strong> Rp ${Number(data.total_price).toLocaleString('id-ID')}</p>
+    `;
 
-    document.getElementById('total_price').value = formatRupiah(finalTotal);
-}
+    document.getElementById('receiptContent').innerHTML = content;
 
+    let receiptModal = new bootstrap.Modal(document.getElementById('receiptModal'));
+    receiptModal.show();
 
-document.querySelector('form').addEventListener('submit', function(e) {
-    const totalInput = document.getElementById('total_price');
-    // Hapus "Rp " dan titik
-    const cleanValue = totalInput.value.replace(/[^0-9]/g, '');
-    totalInput.value = cleanValue;
+    form.reset();
+    document.getElementById('total_price_display').value = '';
+  })
+  .catch(error => {
+    console.error('Gagal booking:', error);
+    alert('Booking gagal. Coba lagi!');
+  });
 });
+
+
 
 
 </script>
-
-</body>
-</html>
+@endpush

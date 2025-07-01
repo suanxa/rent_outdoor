@@ -4,6 +4,8 @@ use App\Http\Controllers\SuryaRentalController;
 use App\Http\Controllers\SuryaItemController;
 use App\Http\Controllers\SuryaUserController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SuryaCustomerController;
+use App\Http\Middleware\RoleAdmin;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -49,18 +51,29 @@ Route::post('/rentals', [SuryaRentalController::class, 'store']);
 |--------------------------------------------------------------------------
 */
 
-Route::prefix('admin')->group(function () {
+
+Route::prefix('admin')->middleware('auth')->group(function () {
+
     Route::get('/dashboard', function () {
         return view('admin.adminDashboard');
     })->name('admin.dashboard');
 
     // Customer Management
     Route::get('/customers', [SuryaUserController::class, 'adminIndex']);
+    Route::delete('/customers/{id}', [SuryaCustomerController::class, 'destroy'])
+        ->middleware(RoleAdmin::class)
+        ->name('customers.destroy');
 
     // Item Management
     Route::get('/items', [SuryaItemController::class, 'adminIndex']);
-    Route::get('/items/create', [SuryaItemController::class, 'create']);
-    Route::post('/items', [SuryaItemController::class, 'store']);
+    
+    // hanya admin yang boleh create dan store item
+    Route::get('/items/create', [SuryaItemController::class, 'create'])
+        ->middleware(RoleAdmin::class);
+    Route::post('/items', [SuryaItemController::class, 'store'])
+        ->middleware(RoleAdmin::class);
+
+    // edit dan delete bisa semua admin / sek_admin misal (atau tinggal atur middleware-nya)
     Route::get('/items/{id}/edit', [SuryaItemController::class, 'edit']);
     Route::put('/items/{id}', [SuryaItemController::class, 'update']);
     Route::delete('/items/{id}', [SuryaItemController::class, 'destroy']);

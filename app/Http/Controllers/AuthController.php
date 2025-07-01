@@ -14,34 +14,38 @@ class AuthController extends Controller
     }
 
     // Proses login
-    public function login(Request $request)
-    {
-        // Validasi input
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required'
-        ]);
+public function login(Request $request)
+{
+    // Validasi input
+    $request->validate([
+        'email'    => 'required|email',
+        'password' => 'required'
+    ]);
 
-        // Ambil data email dan password
-        $credentials = $request->only('email', 'password');
+    // Ambil data email dan password
+    $credentials = $request->only('email', 'password');
 
-        // Coba login
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate(); // Prevent session fixation attack
+    // Coba login
+    if (Auth::attempt($credentials)) {
+        $request->session()->regenerate(); // Prevent session fixation attack
 
-            // Cek role user yang login
-            if (Auth::user()->role === 'admin') {
-                return redirect()->route('admin.dashboard'); // Lebih baik pakai named route
-            } else {
-                return redirect()->route('landing');
-            }
+        // Cek role user yang login
+        $user = Auth::user(); // ambil user
+        $role = $user->role;
+
+        if ($role === 'admin' || $role === 'sek_admin') {
+            return redirect()->route('admin.dashboard');
+        } else {
+            return redirect()->route('landing');
         }
-
-        // Jika gagal
-        return back()->withErrors([
-            'login' => 'Email atau password salah.',
-        ])->onlyInput('email');
     }
+
+    // Jika gagal
+    return back()->withErrors([
+        'login' => 'Email atau password salah.',
+    ])->onlyInput('email');
+}
+
 
     // Proses logout
     public function logout(Request $request)

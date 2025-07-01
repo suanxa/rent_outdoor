@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SuryaCustomer;
 use Illuminate\Http\Request;
+use App\Models\SuryaUser;
 
 class SuryaCustomerController extends Controller
 {
@@ -58,8 +59,17 @@ class SuryaCustomerController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(SuryaCustomer $suryaCustomer)
-    {
-        //
+public function destroy($id)
+{
+    $user = auth()->user();
+    if ($user->role !== 'admin') {
+        abort(403, 'Akses ditolak. Hanya admin yang boleh menghapus customer.');
     }
+
+    $customer = \App\Models\SuryaCustomer::findOrFail($id);
+    $customer->delete();
+
+    return redirect()->back()->with('success', 'Customer berhasil dihapus.');
+}
+
 }
