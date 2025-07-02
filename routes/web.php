@@ -77,6 +77,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/items/{id}/edit', [SuryaItemController::class, 'edit']);
     Route::put('/items/{id}', [SuryaItemController::class, 'update']);
     Route::delete('/items/{id}', [SuryaItemController::class, 'destroy']);
+    Route::get('/api/item-stock/{id}', [SuryaItemController::class, 'getStock']);
+
 
     // Rental Management
     Route::get('/rentals', [SuryaRentalController::class, 'adminIndex']);

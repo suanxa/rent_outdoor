@@ -65,17 +65,22 @@
           <div class="item-row mb-3 d-flex align-items-center">
             <select name="items[]" class="form-select me-2 item-select" required>
               <option value="" disabled selected>-- Pilih Barang --</option>
-              @foreach($categories as $category)
-              <optgroup label="{{ $category->name }}">
-                @foreach($category->items as $item)
-                <option value="{{ $item->id }}" data-price="{{ $item->rental_price }}">
-                  {{ $item->name }}
-                </option>
-                @endforeach
-              </optgroup>
-              @endforeach
+          @foreach($categories as $category)
+  <optgroup label="{{ $category->name }}">
+    @foreach($category->items as $item)
+      @if($item->stock > 0)
+        <option value="{{ $item->id }}" data-price="{{ $item->rental_price }}" data-stock="{{ $item->stock }}">
+          {{ $item->name }}
+        </option>
+      @endif
+    @endforeach
+  </optgroup>
+@endforeach
+
+
             </select>
             <input type="number" name="quantities[]" class="form-control me-2" placeholder="Jumlah" required>
+            <input type="number" class="form-control me-2 stock-input" placeholder="Stok" readonly>
             <input type="number" class="form-control me-2 price-input" placeholder="Harga" readonly>
             <button type="button" class="btn btn-danger remove-item">Hapus</button>
           </div>
@@ -170,11 +175,18 @@ document.getElementById('add-item').addEventListener('click', function() {
 // Harga otomatis
 document.addEventListener('change', function(e){
   if(e.target.classList.contains('item-select')){
-    const price = e.target.selectedOptions[0].getAttribute('data-price');
-    e.target.closest('.item-row').querySelector('.price-input').value = price;
+    const selectedOption = e.target.selectedOptions[0];
+    const price = selectedOption.getAttribute('data-price');
+    const stock = selectedOption.getAttribute('data-stock');
+
+    const row = e.target.closest('.item-row');
+    row.querySelector('.price-input').value = price;
+    row.querySelector('.stock-input').value = stock;
+
     hitungTotal();
   }
 });
+
 
 // Hapus barang
 document.addEventListener('click', function(e){

@@ -32,7 +32,7 @@
         @else
         <li class="nav-item">
           <a class="btn btn-primary ms-3" href="/login">
-            <img src="https://img.icons8.com/ios-glyphs/16/ffffff/user.png" class="me-1"> Login Admin
+            <img src="https://img.icons8.com/ios-glyphs/16/ffffff/user.png" class="me-1"> Login
           </a>
         </li>
         @endif

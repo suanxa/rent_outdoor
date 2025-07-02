@@ -116,4 +116,14 @@ class SuryaItemController extends Controller
 
         return redirect('/admin/items')->with('success', 'Barang berhasil dihapus!');
     }
+
+    public function getStock($id)
+{
+    $item = Item::findOrFail($id);
+    return response()->json([
+        'stock' => $item->stock,
+        'price' => $item->rental_price
+    ]);
+}
+
 }

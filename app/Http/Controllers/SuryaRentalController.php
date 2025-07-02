@@ -34,10 +34,14 @@ class SuryaRentalController extends Controller
      * Show the form for creating a new resource.
      */
     public function create()
-    {
-    $categories = SuryaCategory::with('items')->get();
+{
+    $categories = SuryaCategory::with(['items' => function($query) {
+        $query->where('stock', '>', 0);
+    }])->get();
+
     return view('rentals', compact('categories'));
-    }
+}
+
     public function search(Request $request)
 {
     $keyword = $request->keyword;
@@ -56,7 +60,6 @@ class SuryaRentalController extends Controller
      */
 public function store(Request $request)
 {
-    // 1. Simpan ke tabel customers
     $customer = SuryaCustomer::create([
         'name'    => $request->customer_name,
         'email'   => $request->customer_email,
@@ -64,7 +67,6 @@ public function store(Request $request)
         'address' => $request->customer_address,
     ]);
 
-    // 2. Simpan ke tabel rentals
     $user = auth()->user();
     $rental = SuryaRental::create([
         'customer_id' => $customer->id,
@@ -75,11 +77,18 @@ public function store(Request $request)
         'total_price' => $request->total_price,
     ]);
 
-    // 3. Simpan barang rental ke tabel surya_rental_items
     $itemsData = [];
     foreach ($request->items as $key => $itemId) {
         $quantity = $request->quantities[$key];
         $item     = SuryaItem::findOrFail($itemId);
+
+        // Validasi stok
+        if ($item->stock < $quantity) {
+            return response()->json([
+                'error' => 'Stok ' . $item->name . ' hanya tersedia ' . $item->stock . ' unit.'
+            ], 400);
+        }
+
         $subtotal = $item->rental_price * $quantity;
 
         DB::table('surya_rental_items')->insert([
@@ -91,6 +100,10 @@ public function store(Request $request)
             'updated_at' => now(),
         ]);
 
+        // Kurangi stok
+        $item->stock -= $quantity;
+        $item->save();
+
         $itemsData[] = [
             'name'     => $item->name,
             'quantity' => $quantity,
@@ -99,7 +112,6 @@ public function store(Request $request)
         ];
     }
 
-    // 4. Kalau request AJAX, balikan JSON
     if ($request->ajax()) {
         return response()->json([
             'customer_name'    => $customer->name,
@@ -113,7 +125,6 @@ public function store(Request $request)
         ]);
     }
 
-    // 5. Kalau bukan AJAX, redirect biasa
     return redirect()->back()->with('success', 'Booking berhasil disimpan!');
 }
 
@@ -151,8 +162,19 @@ public function update(Request $request, $id)
         'status' => 'required|in:booked,ongoing,completed,cancelled'
     ]);
 
-    $rental = SuryaRental::findOrFail($id);
-    $rental->status = $request->status;
+    $rental = SuryaRental::with('items')->findOrFail($id);
+    $oldStatus = $rental->status;
+    $newStatus = $request->status;
+
+    // Kalau status berubah dari booked/ongoing ke completed/cancelled
+    if (in_array($oldStatus, ['booked', 'ongoing']) && in_array($newStatus, ['completed', 'cancelled'])) {
+        foreach ($rental->items as $item) {
+            $item->stock += $item->pivot->quantity;
+            $item->save();
+        }
+    }
+
+    $rental->status = $newStatus;
     $rental->save();
 
     return redirect()->back()->with('success', 'Status pesanan berhasil diperbarui!');
