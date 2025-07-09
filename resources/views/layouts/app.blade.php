@@ -18,11 +18,12 @@
     @yield('content') 
   </div>
 
-  <footer class="bg-dark text-white py-4 text-center mt-5">
-    <div class="container">
-      <p class="mb-0">&copy; {{ date('Y') }} Suanxa Rent Outdoor. All Rights Reserved.</p>
-    </div>
-  </footer>
+  <footer class="text-dark py-4 text-center mt-5" style="background-color: #F5F5DC;">
+  <div class="container">
+    <p class="mb-0">&copy; {{ date('Y') }} Suanxa Rent Outdoor. All Rights Reserved.</p>
+  </div>
+</footer>
+
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script src="{{ asset('scriptJS/script.js') }}"></script>

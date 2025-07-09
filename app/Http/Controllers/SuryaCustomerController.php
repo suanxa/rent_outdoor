@@ -66,7 +66,7 @@ public function destroy($id)
         abort(403, 'Akses ditolak. Hanya admin yang boleh menghapus customer.');
     }
 
-    $customer = \App\Models\SuryaCustomer::findOrFail($id);
+    $customer = \App\Models\SuryaUser::findOrFail($id);
     $customer->delete();
 
     return redirect()->back()->with('success', 'Customer berhasil dihapus.');
