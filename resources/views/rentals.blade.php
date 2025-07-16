@@ -265,9 +265,11 @@
       </div>
 
       <div class="modal-footer">
-        <button class="btn rounded-pill text-white" style="background-color: #0f9446; border: none;" onclick="window.print()">
-          <i class="fas fa-print me-2"></i> Cetak Struk
-        </button>
+<button class="btn rounded-pill text-white" style="background-color: #0f9446; border: none;" onclick="printReceiptFromModal()">
+  <i class="fas fa-print me-2"></i> Cetak Struk
+</button>
+
+
         <button type="button" class="btn btn-outline-secondary rounded-pill" data-bs-dismiss="modal">
           <i class="fas fa-times me-2"></i> Tutup
         </button>
@@ -580,6 +582,52 @@
             alert('Terjadi kesalahan saat memproses booking. Silakan coba lagi.');
         });
     });
+
+
+    function printReceiptFromModal() {
+    const receiptModal = document.getElementById('receiptModal');
+    const receiptContent = document.getElementById('receiptContent').innerHTML;
+
+    // Buka window baru
+    const printWindow = window.open('', '', 'width=800,height=600');
+
+    // Copy style dari halaman utama (supaya warna, font, layout sama persis)
+    let styles = '';
+    for (let i = 0; i < document.styleSheets.length; i++) {
+        if (document.styleSheets[i].href) {
+            styles += `<link rel="stylesheet" href="${document.styleSheets[i].href}">`;
+        }
+    }
+
+    // Tulis isi receipt ke window baru
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>Struk Booking - Suanxa Outdoor</title>
+            ${styles}
+            <style>
+                body { font-family: Arial, sans-serif; padding: 20px; color: #000; }
+                .modal-footer, .btn, button { display: none !important; }
+                @media print {
+                    @page { size: A4; margin: 15mm; }
+                }
+            </style>
+        </head>
+        <body>
+            ${receiptModal.innerHTML}
+            <script>
+                window.onload = function() {
+                    window.print();
+                    window.close();
+                }
+            <\/script>
+        </body>
+        </html>
+    `);
+
+    printWindow.document.close();
+}
+
 </script>
 @endpush
 

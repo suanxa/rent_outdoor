@@ -68,48 +68,57 @@ public function store(Request $request)
     ]);
 
     $user = auth()->user();
-    $rental = SuryaRental::create([
-        'customer_id' => $customer->id,
-        'user_id'     => $user ? $user->id : null,
-        'rental_date' => $request->rental_date,
-        'return_date' => $request->return_date,
-        'status'      => 'booked',
-        'total_price' => $request->total_price,
-    ]);
 
     $itemsData = [];
+    $subtotal  = 0;
+
     foreach ($request->items as $key => $itemId) {
         $quantity = $request->quantities[$key];
         $item     = SuryaItem::findOrFail($itemId);
 
-        // Validasi stok
         if ($item->stock < $quantity) {
             return response()->json([
                 'error' => 'Stok ' . $item->name . ' hanya tersedia ' . $item->stock . ' unit.'
             ], 400);
         }
 
-        $subtotal = $item->rental_price * $quantity;
+        $itemSubtotal = $item->rental_price * $quantity;
+        $subtotal    += $itemSubtotal;
 
-        DB::table('surya_rental_items')->insert([
-            'rental_id'  => $rental->id,
-            'item_id'    => $itemId,
-            'quantity'   => $quantity,
-            'subtotal'   => $subtotal,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        $itemsData[] = [
+            'item_id'  => $itemId,
+            'quantity' => $quantity,
+            'subtotal' => $itemSubtotal,
+            'name'     => $item->name,
+            'price'    => $item->rental_price,
+        ];
 
         // Kurangi stok
         $item->stock -= $quantity;
         $item->save();
+    }
 
-        $itemsData[] = [
-            'name'     => $item->name,
-            'quantity' => $quantity,
-            'price'    => $item->rental_price,
-            'subtotal' => $subtotal,
-        ];
+    $discount    = auth()->check() ? $subtotal * 0.25 : 0;
+    $total_price = $subtotal - $discount;
+
+    $rental = SuryaRental::create([
+        'customer_id' => $customer->id,
+        'user_id'     => $user ? $user->id : null,
+        'rental_date' => $request->rental_date,
+        'return_date' => $request->return_date,
+        'status'      => 'booked',
+        'total_price' => $total_price,
+    ]);
+
+    foreach ($itemsData as $item) {
+        DB::table('surya_rental_items')->insert([
+            'rental_id'  => $rental->id,
+            'item_id'    => $item['item_id'],
+            'quantity'   => $item['quantity'],
+            'subtotal'   => $item['subtotal'],
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 
     if ($request->ajax()) {
@@ -120,13 +129,17 @@ public function store(Request $request)
             'customer_address' => $customer->address,
             'rental_date'      => $rental->rental_date,
             'return_date'      => $rental->return_date,
-            'total_price'      => $rental->total_price,
             'items'            => $itemsData,
+            'subtotal'         => $subtotal,
+            'discount'         => $discount,
+            'total_price'      => $total_price,
         ]);
     }
 
     return redirect()->back()->with('success', 'Booking berhasil disimpan!');
 }
+
+
 
 
 public function adminIndex()
@@ -183,12 +196,21 @@ public function update(Request $request, $id)
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+public function destroy($id)
 {
-    $rental = SuryaRental::findOrFail($id);
+    $rental = SuryaRental::with('customer')->findOrFail($id);
+    $customer = $rental->customer;
+
+    // Hapus rental-nya dulu
     $rental->delete();
+
+    // Cek apakah customer masih punya rental lain
+    if ($customer->rentals()->count() == 0) {
+        $customer->delete();
+    }
 
     return redirect()->back()->with('success', 'Data pesanan berhasil dihapus!');
 }
+
 }
 

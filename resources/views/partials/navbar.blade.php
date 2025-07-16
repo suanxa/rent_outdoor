@@ -3,7 +3,7 @@
     <!-- Brand Logo -->
     <a class="navbar-brand fw-bold" href="{{ url('/') }}" style="color: #2E8B57;">
       <img src="{{ asset('images/suanxashop.png') }}" alt="Logo" height="30" class="d-inline-block align-top me-2">
-      Suanxa Outdoor
+      Suanxa Rental Outdoor
     </a>
 
     <!-- Mobile Toggle Button -->
@@ -15,7 +15,7 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
-          <a class="nav-link" href="{{ url('/') }}#beranda" style="color: #556B2F;">
+          <a class="nav-link" href="{{ url('/') }}#beranda">
             <i class="fas fa-home me-1"></i> Beranda
           </a>
         </li>

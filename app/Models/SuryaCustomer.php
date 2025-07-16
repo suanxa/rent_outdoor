@@ -20,6 +20,6 @@ class SuryaCustomer extends Model
 
     public function rentals()
     {
-        return $this->hasMany(SuryaRental::class);
+        return $this->hasMany(SuryaRental::class, 'customer_id');
     }
 }

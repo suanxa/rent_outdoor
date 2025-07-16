@@ -5,6 +5,7 @@ use App\Http\Controllers\SuryaItemController;
 use App\Http\Controllers\SuryaUserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SuryaCustomerController;
+use App\Http\Controllers\AdminDashboardController;  
 use App\Http\Middleware\RoleAdmin;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -47,16 +48,14 @@ Route::post('/rentals', [SuryaRentalController::class, 'store']);
 
 /*
 |--------------------------------------------------------------------------
-| Admin Routes (gunakan prefix & middleware kalau mau lebih aman)
+| Admin Routes (pakai prefix & middleware auth)
 |--------------------------------------------------------------------------
 */
 
-
 Route::prefix('admin')->middleware('auth')->group(function () {
 
-    Route::get('/dashboard', function () {
-        return view('admin.adminDashboard');
-    })->name('admin.dashboard');
+    // Dashboard pakai Controller (fix variable passing)
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
 
     // Customer Management
     Route::get('/customers', [SuryaUserController::class, 'adminIndex']);
@@ -66,23 +65,22 @@ Route::prefix('admin')->middleware('auth')->group(function () {
 
     // Item Management
     Route::get('/items', [SuryaItemController::class, 'adminIndex']);
-    
-    // hanya admin yang boleh create dan store item
-    Route::get('/items/create', [SuryaItemController::class, 'create'])
-        ->middleware(RoleAdmin::class);
-    Route::post('/items', [SuryaItemController::class, 'store'])
-        ->middleware(RoleAdmin::class);
-
-    // edit dan delete bisa semua admin / sek_admin misal (atau tinggal atur middleware-nya)
+    Route::get('/items/create', [SuryaItemController::class, 'create'])->middleware(RoleAdmin::class);
+    Route::post('/items', [SuryaItemController::class, 'store'])->middleware(RoleAdmin::class);
     Route::get('/items/{id}/edit', [SuryaItemController::class, 'edit']);
     Route::put('/items/{id}', [SuryaItemController::class, 'update']);
     Route::delete('/items/{id}', [SuryaItemController::class, 'destroy']);
-    Route::get('/api/item-stock/{id}', [SuryaItemController::class, 'getStock']);
 
+    // API Stock item
+    Route::get('/api/item-stock/{id}', [SuryaItemController::class, 'getStock']);
 
     // Rental Management
     Route::get('/rentals', [SuryaRentalController::class, 'adminIndex']);
     Route::get('/rentals/search', [SuryaRentalController::class, 'search']);
     Route::put('/rentals/{id}', [SuryaRentalController::class, 'update']);
     Route::delete('/rentals/{id}', [SuryaRentalController::class, 'destroy']);
+
 });
+
+// 🚫 Hapus route dashboard duplikat ini:
+# Route::get('/admin/adminDashboard', [AdminDashboardController::class, 'index']);

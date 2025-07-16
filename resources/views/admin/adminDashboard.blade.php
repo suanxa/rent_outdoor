@@ -603,7 +603,7 @@
                         </div>
                         <div class="card-content">
                             <h3>Total Customer</h3>
-                            <p class="stat-number">6</p>
+                            <p class="stat-number">{{ $totalCustomer }}</p>
                             <a href="/admin/customers" class="card-link">
                                 Lihat Detail <i class="fas fa-arrow-right"></i>
                             </a>
@@ -616,7 +616,7 @@
                         </div>
                         <div class="card-content">
                             <h3>Total Item</h3>
-                            <p class="stat-number">5</p>
+                            <p class="stat-number">{{ $totalItem }}</p>
                             <a href="/admin/items" class="card-link">
                                 Lihat Detail <i class="fas fa-arrow-right"></i>
                             </a>
@@ -629,7 +629,7 @@
                         </div>
                         <div class="card-content">
                             <h3>Total Rental</h3>
-                            <p class="stat-number">129</p>
+                            <p class="stat-number">{{ $totalRental }}</p>
                             <a href="/admin/rentals" class="card-link">
                                 Lihat Detail <i class="fas fa-arrow-right"></i>
                             </a>
@@ -645,26 +645,43 @@
                                 <i class="fas fa-user-plus"></i>
                             </div>
                             <div class="activity-content">
-                                <p><strong>Customer baru</strong> mendaftar - CINOPS Tarandam</p>
-                                <span class="activity-time">2 jam yang lalu</span>
+                                <p>
+                                    <strong>Member Baru</strong> mendaftar - 
+                                    {{ $latestUser ? $latestUser->name : 'Belum ada user' }}
+                                </p>
+                                <span class="activity-time">
+                                    {{ $latestUserTime ?? '-' }}
+                                </span>
                             </div>
+
                         </div>
                         <div class="activity-item">
                             <div class="activity-icon">
                                 <i class="fas fa-shopping-cart"></i>
                             </div>
                             <div class="activity-content">
-                                <p><strong>Rental baru</strong> dibuat oleh DIMASSEH</p>
-                                <span class="activity-time">5 jam yang lalu</span>
+                                <p>
+                                    <strong>Rental baru</strong> dibuat oleh 
+                                    {{ $latestRental && $latestRental->customer ? $latestRental->customer->name : 'Belum ada rental' }}
+                                </p>
+                                <span class="activity-time">
+                                    {{ $latestRentalTime ?? '-' }}
+                                </span>
                             </div>
+
                         </div>
                         <div class="activity-item">
                             <div class="activity-icon">
                                 <i class="fas fa-campground"></i>
                             </div>
                             <div class="activity-content">
-                                <p><strong>Item baru</strong> ditambahkan - Tenda Dome 4P</p>
-                                <span class="activity-time">Kemarin, 15:32</span>
+                                <p>
+                                    <strong>Item baru</strong> ditambahkan - 
+                                    {{ $latestItem ? $latestItem->name : 'Belum ada item' }}
+                                </p>
+                                <span class="activity-time">
+                                    {{ $latestItemTime ?? '-' }}
+                                </span>
                             </div>
                         </div>
                     </div>
